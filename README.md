@@ -2,9 +2,9 @@
 
 ## Introduction
 
-Visualization of rotating cube as per quaternion or Euler angles (strictly speaking, the [Tait Bryan Angles](https://en.wikipedia.org/wiki/Euler_angles#Tait%E2%80%93Bryan_angles)) data received over the serial port from any IMU using OpenGL in Python. The MPU-9250 (has on-board accelerometer, magnetometer and gyroscope) has been used with Arduino in this case:
+Visualization of orientation of any IMU with the help of a rotating cube as per quaternions or Euler angles (strictly speaking, the [Tait Bryan Angles](https://en.wikipedia.org/wiki/Euler_angles#Tait%E2%80%93Bryan_angles)) received over the serial port using OpenGL in Python. The MPU-9250 (has on-board accelerometer, magnetometer and gyroscope) has been used with Arduino in this case:
 
-![Alt Text](https://github.com/thecountoftuscany/PyTeapot-Quaternion-Euler-cube-rotation/blob/master/resources/pyteapot-gif.gif)
+![PyTeapot demo](https://github.com/thecountoftuscany/PyTeapot-Quaternion-Euler-cube-rotation/blob/master/resources/pyteapot-gif.gif)
 
 This is an easy to understand Python implementation of the often-used 'MPU Teapot' processing code for the same purpose, but not specific to any particular IMU. PyGame and OpenGL are used for graphics, PySerial is used to get data from serial port.
 
@@ -42,3 +42,7 @@ y168.8099yp12.7914pr-11.8401r
 ```
 
 Each of these must be on separate lines (or should have a '\n' at the end of the string). Other data may also be passed over Serial, provided that none of the characters w, a, b, c, y, p, r are passed (for example, `somethingw0.09wa-0.12ab-0.09bc0.98cy168.8099yp12.7914pr-11.8401rsomethingelse` is valid but `somedataw0.09wa-0.12ab-0.09bc0.98cy168.8099yp12.7914pr-11.8401ranotherstring` is not since it has the characters 'a' and 'r')
+
+## Todo
+
+- [] Receive data over WiFi instead of serial.
