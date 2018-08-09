@@ -1,5 +1,5 @@
 """
-Nishant's PyTeapot module for drawing rotating cube using OpenGL as per
+PyTeapot module for drawing rotating cube using OpenGL as per
 quaternion or yaw, pitch, roll angles received over serial port.
 """
 
@@ -17,7 +17,7 @@ def main():
     video_flags = OPENGL | DOUBLEBUF
     pygame.init()
     screen = pygame.display.set_mode((640, 480), video_flags)
-    pygame.display.set_caption("PyTeapot testing")
+    pygame.display.set_caption("PyTeapot IMU orientation visualization")
     resizewin(640, 480)
     init()
     frames = 0
