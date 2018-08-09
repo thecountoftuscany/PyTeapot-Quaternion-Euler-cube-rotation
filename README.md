@@ -45,4 +45,4 @@ Each of these must be on separate lines (or should have a '\n' at the end of the
 
 ## Todo
 
-- [] Receive data over WiFi instead of serial.
+- [ ] Receive data over WiFi instead of serial.
