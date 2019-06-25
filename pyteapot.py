@@ -4,14 +4,25 @@ quaternion or yaw, pitch, roll angles received over serial port.
 """
 
 import pygame
-import serial
 import math
 from OpenGL.GL import *
 from OpenGL.GLU import *
 from pygame.locals import *
 
-ser = serial.Serial('/dev/ttyUSB0', 38400)
-useQuat = True   # set true for using quaternions, false for using y,p,r angles
+useSerial = False # set true for using serial for data transmission, false for wifi
+useQuat = False   # set true for using quaternions, false for using y,p,r angles
+
+if(useSerial):
+    import serial
+    ser = serial.Serial('/dev/ttyUSB0', 38400)
+else:
+    import socket
+    import select
+    UDP_IP = "0.0.0.0"
+    UDP_PORT = 5005
+    sock = socket.socket(socket.AF_INET, # Internet
+                         socket.SOCK_DGRAM) # UDP
+    sock.bind((UDP_IP, UDP_PORT))
 
 def main():
     video_flags = OPENGL | DOUBLEBUF
@@ -84,21 +95,27 @@ def cleanSerialBegin():
 
 
 def read_data():
-    if(useQuat):
+    if(useSerial):
         ser.reset_input_buffer()
         cleanSerialBegin()
         line = ser.readline().decode('UTF-8').replace('\n', '')
         print(line)
+    else:
+        # Waiting for data from udp port 5005
+        while True:
+            ready = select.select([sock], [], [], 0.025)
+            if ready[0]:
+                line = sock.recv(1000).decode('UTF-8').replace('\n', '')
+                print(line)
+                break
+                
+    if(useQuat):
         w = float(line.split('w')[1])
         nx = float(line.split('a')[1])
         ny = float(line.split('b')[1])
         nz = float(line.split('c')[1])
         return [w, nx, ny, nz]
     else:
-        ser.reset_input_buffer()
-        cleanSerialBegin()
-        line = ser.readline().decode('UTF-8').replace('\n', '')
-        print(line)
         yaw = float(line.split('y')[1])
         pitch = float(line.split('p')[1])
         roll = float(line.split('r')[1])
