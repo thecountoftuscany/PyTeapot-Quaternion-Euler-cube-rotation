@@ -17,7 +17,7 @@ if(useSerial):
     ser = serial.Serial('/dev/ttyUSB0', 38400)
 else:
     import socket
-    import select
+
     UDP_IP = "0.0.0.0"
     UDP_PORT = 5005
     sock = socket.socket(socket.AF_INET, # Internet
@@ -102,12 +102,9 @@ def read_data():
         print(line)
     else:
         # Waiting for data from udp port 5005
-        while True:
-            ready = select.select([sock], [], [], 0.025)
-            if ready[0]:
-                line = sock.recv(1000).decode('UTF-8').replace('\n', '')
-                print(line)
-                break
+        data, addr = sock.recvfrom(1024) # buffer size is 1024 bytes
+        line = data.decode('UTF-8').replace('\n', '')
+        print(line)
                 
     if(useQuat):
         w = float(line.split('w')[1])
