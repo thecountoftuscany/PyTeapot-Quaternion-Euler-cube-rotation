@@ -48,7 +48,8 @@ def main():
         pygame.display.flip()
         frames += 1
     print("fps: %d" % ((frames*1000)/(pygame.time.get_ticks()-ticks)))
-    ser.close()
+    if(useSerial):
+        ser.close()
 
 
 def resizewin(width, height):
