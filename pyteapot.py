@@ -190,7 +190,7 @@ def drawText(position, textString, size):
 
 def quat_to_ypr(q):
     yaw   = math.atan2(2.0 * (q[1] * q[2] + q[0] * q[3]), q[0] * q[0] + q[1] * q[1] - q[2] * q[2] - q[3] * q[3])
-    pitch = -math.sin(2.0 * (q[1] * q[3] - q[0] * q[2]))
+    pitch = -math.asin(2.0 * (q[1] * q[3] - q[0] * q[2]))
     roll  = math.atan2(2.0 * (q[0] * q[1] + q[2] * q[3]), q[0] * q[0] - q[1] * q[1] - q[2] * q[2] + q[3] * q[3])
     pitch *= 180.0 / math.pi
     yaw   *= 180.0 / math.pi
