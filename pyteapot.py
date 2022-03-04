@@ -62,7 +62,7 @@ def init():
     glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST)
 
 
-def cleanSerialBegin():
+def cleanSerialBegin(useQuat):
     if(useQuat):
         try:
             line = ser.readline().decode('UTF-8').replace('\n', '')
@@ -85,7 +85,7 @@ def cleanSerialBegin():
 def read_data(ser, sock, useSerial, useQuat):
     if(useSerial):
         ser.reset_input_buffer()
-        cleanSerialBegin()
+        cleanSerialBegin(useQuat)
         line = ser.readline().decode('UTF-8').replace('\n', '')
         print(line)
     else:
