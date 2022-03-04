@@ -21,13 +21,14 @@ Most of the code is self-explanatory. However some modifications might be requir
 - If receiving quaternions over serial or wifi, the declination at the particular location should to be updated in =quat_to_ypr(q)= function to get correct yaw angles printed *on screen*. (The cube rotation is not dependent on this and will still work fine otherwise)
 
 Examples:
-```
+#+BEGIN_EXAMPLE
 # using serial stream and quaternion representation
 python pyteapot.py --useSerial True --useQuat True --port /dev/ttyUSB0
 
 # using udp stream and euler representation
 python pyteapot.py --useSerial False --useQuat False --udp_id 0.0.0.0 --udp_port 5005
-```
+#+END_EXAMPLE
+
 
 * String passed over Serial or Wifi
 To use this module, the data received over serial or udp port should be in the format specified below:
