@@ -25,13 +25,13 @@ def main(useSerial, useQuat, ser, sock):
         if event.type == QUIT or (event.type == KEYDOWN and event.key == K_ESCAPE):
             break
         if(useQuat):
-            [w, nx, ny, nz] = read_data(ser, sock)
+            [w, nx, ny, nz] = read_data(ser, sock, useSerial, useQuat)
         else:
-            [yaw, pitch, roll] = read_data(ser, sock)
+            [yaw, pitch, roll] = read_data(ser, sock, useSerial, useQuat)
         if(useQuat):
-            draw(w, nx, ny, nz)
+            draw(w, nx, ny, nz, useQuat)
         else:
-            draw(1, yaw, pitch, roll)
+            draw(1, yaw, pitch, roll, useQuat)
         pygame.display.flip()
         frames += 1
     print("fps: %d" % ((frames*1000)/(pygame.time.get_ticks()-ticks)))
@@ -82,7 +82,7 @@ def cleanSerialBegin():
             pass
 
 
-def read_data(ser, sock):
+def read_data(ser, sock, useSerial, useQuat):
     if(useSerial):
         ser.reset_input_buffer()
         cleanSerialBegin()
@@ -107,7 +107,7 @@ def read_data(ser, sock):
         return [yaw, pitch, roll]
 
 
-def draw(w, nx, ny, nz):
+def draw(w, nx, ny, nz, useQuat):
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     glLoadIdentity()
     glTranslatef(0, 0.0, -7.0)
