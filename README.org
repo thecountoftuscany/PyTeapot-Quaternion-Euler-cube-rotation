@@ -19,6 +19,17 @@ Most of the code is self-explanatory. However some modifications might be requir
 - Set udp port by changing the variable =UDP_PORT=, if using wifi for data transmission.
 - Set =useQuat= to =True= if receiving *quaternions* over serial or WiFi and =False= if receiving *Euler angles*.
 - If receiving quaternions over serial or wifi, the declination at the particular location should to be updated in =quat_to_ypr(q)= function to get correct yaw angles printed *on screen*. (The cube rotation is not dependent on this and will still work fine otherwise)
+- See String passed from file for details regarding visualization from a file
+
+Examples:
+#+BEGIN_EXAMPLE
+# using serial stream and quaternion representation
+python pyteapot.py --useSerial True --useQuat True --port /dev/ttyUSB0
+
+# using udp stream and euler representation
+python pyteapot.py --useSerial False --useQuat False --udp_id 0.0.0.0 --udp_port 5005
+#+END_EXAMPLE
+
 
 * String passed over Serial or Wifi
 To use this module, the data received over serial or udp port should be in the format specified below:
@@ -45,11 +56,24 @@ y168.8099yp12.7914pr-11.8401r
 
 Each of these must be on separate lines (or should have a '\n' at the end of the string). Other data may also be passed over Serial or Wifi, provided that none of the characters =w=, =a=, =b=, =c=, =y=, =p=, =r= are passed (for example, =somethingw0.09wa-0.12ab-0.09bc0.98cy168.8099yp12.7914pr-11.8401rsomethingelse= is valid but =somedataw0.09wa-0.12ab-0.09bc0.98cy168.8099yp12.7914pr-11.8401ranotherstring= is not since it has the characters =a= and =r=)
 
-* TODO Todos
+* String passed from file
+To use this module, the data should be stored in a file and the file name should be passed as an argument to the module. The file should contain the data with values separated by any delimeter.
+The data can be quarternion or euler angles. While running the script =pyteapot_from_file.py=, you need to pass the column ids for the quarternion/euler angles so we can read appropriate values from the file.
+
+Examples
+#+BEGIN_EXAMPLE
+# using quarternion representation reading from csv file with quarternions in the 4,5,6,7 indexed columns (zero indexed)
+python pyteapot_from_file.py --useQuat True --text_file_path /home/menonsandu/Downloads/dataset-corridor1_512_16/mav0/mocap0/data.csv --column_ids 4,5,6,7 --delimiter ','
+
+# using euler representation reading from csv file with euler angles in the 1,2,3 indexed columns (zero indexed)
+python pyteapot_from_file.py --useQuat False --text_file_path /home/menonsandu/Downloads/dataset-corridor1_512_16/mav0/imu0/data.csv --column_ids 1,2,3 --delimiter ','
+#+END_EXAMPLE
+
+* Todos
 - [x] Receive data over WiFi instead of serial. - **Done!**
-- [ ] Add a nice [[https://docs.python.org/3/library/argparse.html][ ~argparse~ ]] interface instead of requiring the user to change variables in the script. Include example usage in docstring (a la [[https://tldr.sh/][tldr]] or [[http://bropages.org][bro]])
+- [x] Add a nice [[https://docs.python.org/3/library/argparse.html][ ~argparse~ ]] interface instead of requiring the user to change variables in the script. Include example usage in docstring (a la [[https://tldr.sh/][tldr]] or [[http://bropages.org][bro]])
 - [ ] Add some keyboard support, eg. pausing / resuming the visualization with spacebar etc
 - [ ] Add optional support for x, y, z too. Also, multiple simultaneous viewports (eg. to compare with ground truth from MoCap)
-- [ ] Read from text file instead of serial or UDP
+- [x] Read from text file instead of serial or UDP
 - [ ] Other data collection methods: bluetooth?
 - [ ] Write tests, docstrings etc

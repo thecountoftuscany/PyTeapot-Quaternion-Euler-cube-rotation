@@ -8,23 +8,10 @@ import math
 from OpenGL.GL import *
 from OpenGL.GLU import *
 from pygame.locals import *
+import argparse
 
-useSerial = False # set true for using serial for data transmission, false for wifi
-useQuat = False   # set true for using quaternions, false for using y,p,r angles
 
-if(useSerial):
-    import serial
-    ser = serial.Serial('/dev/ttyUSB0', 38400)
-else:
-    import socket
-
-    UDP_IP = "0.0.0.0"
-    UDP_PORT = 5005
-    sock = socket.socket(socket.AF_INET, # Internet
-                         socket.SOCK_DGRAM) # UDP
-    sock.bind((UDP_IP, UDP_PORT))
-
-def main():
+def main(useSerial, useQuat, ser, sock):
     video_flags = OPENGL | DOUBLEBUF
     pygame.init()
     screen = pygame.display.set_mode((640, 480), video_flags)
@@ -38,13 +25,13 @@ def main():
         if event.type == QUIT or (event.type == KEYDOWN and event.key == K_ESCAPE):
             break
         if(useQuat):
-            [w, nx, ny, nz] = read_data()
+            [w, nx, ny, nz] = read_data(ser, sock, useSerial, useQuat)
         else:
-            [yaw, pitch, roll] = read_data()
+            [yaw, pitch, roll] = read_data(ser, sock, useSerial, useQuat)
         if(useQuat):
-            draw(w, nx, ny, nz)
+            draw(w, nx, ny, nz, useQuat)
         else:
-            draw(1, yaw, pitch, roll)
+            draw(1, yaw, pitch, roll, useQuat)
         pygame.display.flip()
         frames += 1
     print("fps: %d" % ((frames*1000)/(pygame.time.get_ticks()-ticks)))
@@ -75,7 +62,7 @@ def init():
     glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST)
 
 
-def cleanSerialBegin():
+def cleanSerialBegin(useQuat):
     if(useQuat):
         try:
             line = ser.readline().decode('UTF-8').replace('\n', '')
@@ -95,10 +82,10 @@ def cleanSerialBegin():
             pass
 
 
-def read_data():
+def read_data(ser, sock, useSerial, useQuat):
     if(useSerial):
         ser.reset_input_buffer()
-        cleanSerialBegin()
+        cleanSerialBegin(useQuat)
         line = ser.readline().decode('UTF-8').replace('\n', '')
         print(line)
     else:
@@ -120,7 +107,7 @@ def read_data():
         return [yaw, pitch, roll]
 
 
-def draw(w, nx, ny, nz):
+def draw(w, nx, ny, nz, useQuat):
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     glLoadIdentity()
     glTranslatef(0, 0.0, -7.0)
@@ -200,4 +187,29 @@ def quat_to_ypr(q):
 
 
 if __name__ == '__main__':
-    main()
+    # parse command line
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--useSerial', type=bool, default=False, help='set true for using serial for data transmission, false for wifi')
+    parser.add_argument('--useQuat', type=bool, default=False, help='set true for using quaternions, false for using y,p,r angles')
+    parser.add_argument('--port', type=str, default='/dev/ttyUSB0', help='serial port')
+    parser.add_argument('--udp_id', type=str, default="0.0.0.0")
+    parser.add_argument('--udp_port', type=int, default=5005)
+    args = parser.parse_args()
+
+    useSerial = args.useSerial
+    useQuat = args.useQuat
+
+    if(useSerial):
+        import serial
+        ser = serial.Serial(args.port, 38400)
+    else:
+        import socket
+
+        UDP_IP = args.udp_id
+        UDP_PORT = args.udp_port
+        sock = socket.socket(socket.AF_INET, # Internet
+                            socket.SOCK_DGRAM) # UDP
+        sock.bind((UDP_IP, UDP_PORT))
+
+    main(useSerial, useQuat, ser, sock)
+
