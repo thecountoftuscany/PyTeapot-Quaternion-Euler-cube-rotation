@@ -47,7 +47,7 @@ Each of these must be on separate lines (or should have a '\n' at the end of the
 
 * TODO Todos
 - [x] Receive data over WiFi instead of serial. - **Done!**
-- [ ] Add a nice [[https://docs.python.org/3/library/argparse.html][ ~argparse~ ]] interface instead of requiring the user to change variables in the script. Include example usage in docstring (a la [[https://tldr.sh/][tldr]] or [[http://bropages.org][bro]])
+- [x] Add a nice [[https://docs.python.org/3/library/argparse.html][ ~argparse~ ]] interface instead of requiring the user to change variables in the script. Include example usage in docstring (a la [[https://tldr.sh/][tldr]] or [[http://bropages.org][bro]])
 - [ ] Add some keyboard support, eg. pausing / resuming the visualization with spacebar etc
 - [ ] Add optional support for x, y, z too. Also, multiple simultaneous viewports (eg. to compare with ground truth from MoCap)
 - [ ] Read from text file instead of serial or UDP
